@@ -1,0 +1,16 @@
+$color-primary: #999;
+
+* {
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 1em;
+}
+
+button {
+  width: 15%;
+}
+
+body {
+  background: $color-primary;
+  font-size: 16px;
+}
