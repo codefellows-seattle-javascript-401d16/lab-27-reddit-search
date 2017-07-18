@@ -10,12 +10,22 @@ class SearchForm extends React.Component{
       searchFormLimit: 0,
     }
     this.handleBoardNameChange = this.handleBoardNameChange.bind(this);
+    this.handleResultsLimitChange = this.handleResultsLimitChange.bind(this);
   };
 
 
-//on input change handler
+//on input change handlers
   handleBoardNameChange(e){
     this.setState = {searchFormBoard: e.target.value}
+  }
+  handleResultsLimitChange(e){
+    this.setState = {searchFormLimit: e.target.value}
+  }
+//after data is inputted and saved in the new state, on submit will make a key value pair of the new data
+  handleOnFormSubmit(e){
+    e.preventDefault();
+    this.props.boardSelect(this.state.searchFormBoard)
+    this.props.limitSelect(this.state.searchFormLimit)
   }
 
   render(){
@@ -35,6 +45,8 @@ class SearchForm extends React.Component{
           min = '0'
           max = '100'
           placeholder = 'Quantity'
+          value = {this.state.searchFormLimit}
+          onChange = {this.handleResultsLimitChange}
           />
         </form>
       </div>
