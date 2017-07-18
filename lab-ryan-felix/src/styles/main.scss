@@ -1,0 +1,28 @@
+$RED_OUTLINE_COLOR: #ee0000;
+$ALTERNATING_LI_BG: #cdcdf2;
+
+div.app {
+  margin: 3em auto;
+}
+
+input.invalid {
+  border: 2px solid $RED_OUTLINE_COLOR;
+}
+
+.search-form > div {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+li {
+  list-style: none;
+}
+
+ul {
+  margin: 0 0;
+  padding: 0 0;
+}
+
+ul > li:nth-of-type(odd) {
+  background-color: $ALTERNATING_LI_BG;
+}
