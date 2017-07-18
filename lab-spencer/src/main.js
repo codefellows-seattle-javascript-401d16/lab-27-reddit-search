@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
 
-const API_URL = 'http://www.reddit.com/r';
+const API_URL = 'https://www.reddit.com/r';
 
 class SearchForm extends React.Component {
   constructor(props) {
@@ -95,20 +95,21 @@ class App extends React.Component {
   }
 
   redditRequest(board, resultLimit) {
-    superagent.get(`${API_URL}/${board}.json?limit=${resultLimit}`)
+    superagent.get(`${API_URL}/${board}.json?limit=${resultLimit}`) // it always seems to return the stickies no matter the result limit
       .then(res => {
-        console.log(res.body);
         this.setState({ topics: res.body });
         document.getElementById('search-form').className = '';
       })
-      .catch(() => {
+      .catch(err => {
         document.getElementById('search-form').className = 'error';
+        this.setState({ topics: [] });
       });
   }
 
   render() {
     return (
       <div>
+        <h1>Reddit Search Engine</h1>
         <SearchForm redditRequest={this.redditRequest} />
         <SearchResultList topics={this.state.topics} />
       </div>
