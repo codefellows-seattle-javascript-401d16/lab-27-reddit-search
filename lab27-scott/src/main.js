@@ -6,19 +6,35 @@ class SearchForm extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-      SearchFormBoard: '',
-      SearchFormLimit: 0,
+      searchFormBoard: '',
+      searchFormLimit: 0,
     }
+    this.handleBoardNameChange = this.handleBoardNameChange.bind(this);
   };
+
+
+//on input change handler
+  handleBoardNameChange(e){
+    this.setState = {searchFormBoard: e.target.value}
+  }
 
   render(){
     return (
       <div>
         <form>
           <input
-          type='text'
-          name='boardName'
-          placeholder='Board Name'
+          type = 'text'
+          name = 'boardName'
+          placeholder = 'Board Name'
+          value = {this.state.searchFormBoard}
+          onChange = {this.handleBoardNameChange}
+          />
+          <input
+          type = 'number'
+          name = 'resultsLimit'
+          min = '0'
+          max = '100'
+          placeholder = 'Quantity'
           />
         </form>
       </div>
