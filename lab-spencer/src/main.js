@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
 
-const API_URL = 'http://reddit.com/r';
+const API_URL = 'http://www.reddit.com/r';
 
 class SearchForm extends React.Component {
   constructor(props) {
@@ -64,7 +64,24 @@ class SearchResultList extends React.Component {
   }
 
   render() {
-
+    if(this.props.topics.length === 0)
+      return (<p></p>);
+    let results = [];
+    this.props.topics.data.children.forEach(topic => {
+      results.push(
+        <li key={topic.data.id}>
+          <a href={topic.data.url}>
+            <h2>{topic.data.title}</h2>
+            <p>{topic.data.ups}</p>
+          </a>
+        </li>
+      );
+    });
+    return (
+      <ul>
+        {results}
+      </ul>
+    );
   }
 }
 
@@ -74,25 +91,28 @@ class App extends React.Component {
     this.state = {
       topics: [],
     };
+    this.redditRequest = this.redditRequest.bind(this);
+  }
 
-    redditRequest(board, resultLimit) {
-      superagent.get(`${API_URL}/${board}.json?limit=${resultLimit}`)
-        .then(res => {
-          this.setState({ topics: JSON.parse(res.body) });
-        })
-        .catch(() => {
-          document.getElementById('search-form').addClass('error');
-        });
-    }
+  redditRequest(board, resultLimit) {
+    superagent.get(`${API_URL}/${board}.json?limit=${resultLimit}`)
+      .then(res => {
+        console.log(res.body);
+        this.setState({ topics: res.body });
+        document.getElementById('search-form').className = '';
+      })
+      .catch(() => {
+        document.getElementById('search-form').className = 'error';
+      });
+  }
 
-    render() {
-      return (
-        <div>
-          <SearchForm redditRequest={this.redditRequest} />
-          <SearchResultList />
-        </div>
-      );
-    }
+  render() {
+    return (
+      <div>
+        <SearchForm redditRequest={this.redditRequest} />
+        <SearchResultList topics={this.state.topics} />
+      </div>
+    );
   }
 }
 
