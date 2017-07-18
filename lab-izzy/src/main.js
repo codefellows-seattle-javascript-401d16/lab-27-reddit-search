@@ -1,50 +1,94 @@
 import React from 'react';
+import './style/main.scss';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
 
 const API_URL = 'https://www.reddit.com/r/';
 
+class RedditResultList extends React.Component {
+  constructor(props){
+    super(props);
+
+  }
+
+  render() {
+    return (
+      <ul>
+        {this.props.topics.map((item, i) => {
+          return (
+            <li key={i}>
+              <a href={item.data.url}> {item.data.ups}-{item.data.title} </a>
+             </li>
+          )
+        })}
+      </ul>
+    )
+  }
+}
+
 class RedditForm extends React.Component {
   constructor(props){
     super(props);
     this.state = {
+      count: 0,
       topics: [],
+      hasError: false,
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTextInput = this.handleTextInput.bind(this)
     this.handleNumberInput = this.handleNumberInput.bind(this)
   }
-  // on submit the form should make a request to reddit
-  // GET request to http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}
-  // on success it should pass results to app state
-  // on failure it shoul add a class to the form called error and turn the
-  // forms input borders red
+
   handleSubmit(e){
     e.preventDefault()
-    this.props.redditSelect(this.state.topics);
+    console.log('nothing is happening')
+      superagent.get(`${API_URL}${this.state.topic}.json?limit=${this.state.count}`)
+        .then(res => {
+          this.setState({
+            topics: res.body.data.children
+          })
+        })
+        .catch(err => {
+          this.setState({
+            hasError: true
+          })
+        })
   }
-  // text input for user to supply a reddit board to look up
+
   handleTextInput(e){
-    this.setState({topics: e.target.value})
+    this.setState({topic: e.target.value})
   }
-  // number input for the user to limit the number of results to return
-  // number must be less than 0 and greater than 100
+
   handleNumberInput(e){
-    this.setState({})
+    this.setState({count: e.target.value})
   }
 
   render(){
+    console.log(this.state, 'this.state')
+
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          type='text'
-          name='redditBoard'
-          placeholder='reddit board'
-          value={this.state.topics}
-          onChange={this.handleTextInput}
-        />
-      </form>
+      <div>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type='text'
+            className={this.state.hasError ? 'err' : ''}
+            name='redditBoardText'
+            placeholder='reddit board'
+            onChange={this.handleTextInput}
+          />
+          <input
+            type='number'
+            min='0'
+            max='100'
+            name='redditBoardNumber'
+            placeholder='the number of posts'
+            onChange={this.handleNumberInput}
+          />
+          <button> Click Me! </button>
+        </form>
+        <RedditResultList topics={this.state.topics}/>
+      </div>
     )
   }
 }
@@ -52,73 +96,15 @@ class RedditForm extends React.Component {
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      redditBoardLookup: {},
-      redditBoardSelected: null,
-      redditBoardError: null,
-    }
-
-    this.redditSelect = this.redditSelect.bind(this)
   }
-
-  componentDidUpdate(){
-    console.log('___STATE___', this.state);
-  }
-
-redditSelect(topic){
-  console.log('reddit select topic')
-  if(!this.state.redditBoardLookup[topic]){
-    this.setState({
-      redditBoardSelected: null,
-      redditBoardError: topic,
-    })
-  } else {
-    superagent.get(this.state.redditBoardLookup[topic])
-    .then(res => {
-      console.log('selected redditBoardLookup', res.body)
-      this.setState({
-        redditBoardSelected: res.body,
-        redditBoardError: null,
-      })
-    })
-    .catch(console.error)
-  }
-}
 
   render() {
     return (
       <div>
         <h1>reddit form</h1>
 
-        <RedditForm redditSelect={this.redditSelect} />
+        <RedditForm />
 
-        { this.state.redditBoardError ?
-          <div>
-            <h2> reddit {this.state.redditBoardError} does not exist </h2>
-            <p> please try again </p>
-          </div> :
-          <div>
-            { this.state.redditBoardSelected ?
-              <div>
-                <h2> selected {this.state.redditBoardSelected.topic} </h2>
-                <p> booya </p>
-                <h3> something </h3>
-                <ul>
-                  {this.state.redditBoardSelected.abilities.map((item, i) => {
-                    return (
-                      <li key={i}>
-                        <p> {item.ability.topic} </p>
-                       </li>
-                    )
-                  })}
-                </ul>
-              </div> :
-              <div>
-                <button onSubmit={this.state.handleSubmit}> Click Me! </button>
-              </div>
-            }
-          </div>
-        }
       </div>
     )
   }
