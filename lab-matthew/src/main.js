@@ -107,7 +107,7 @@ class App extends React.Component {
       this.setState({
         topics: res.body.data.children
       })
-      console.log('superagent result', this.state.topics);
+      // console.log('superagent result', this.state.topics);
     })
   }
 
