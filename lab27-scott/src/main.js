@@ -84,10 +84,41 @@ class App extends React.Component{
       <div>
         <h1>Reddit Board Search</h1>
         <SearchForm handleRedditRequest={this.handleRedditRequest}/>
+        <SearchResultList topics={this.state.topics}/>
       </div>
     )
   }
 };
+
+class SearchResultList extends React.Component{
+  constructor(props){
+    super(props);
+    this.state ={};
+    console.log('result props', this.props);
+  }
+
+  render(){
+    console.log('result props break topics', this.props.topics);
+    let redditList = this.props.topics.map((item, i) => {
+      console.log('item.data.url', item);
+      return (
+        <li key={i}>
+          <a href={item[i].data.url}>
+            <h1>{item[i].data.title}</h1>
+            <p>{item[i].data.ups}</p>
+          </a>
+        </li>
+      )
+    })
+    return(
+      <div>
+        <ul>
+          {redditList}
+        </ul>
+      </div>
+    )
+  }
+}
 
 
 ReactDOM.render(<App />, document.getElementById('root'));
