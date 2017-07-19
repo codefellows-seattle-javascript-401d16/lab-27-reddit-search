@@ -1,0 +1,182 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  border: none;
+  background: none;
+  outline: none;
+  text-decoration: none;
+  white-space: normal;
+  list-style: none;
+}
+
+form:focus {
+  border: none;
+  outline: none;
+}
+
+html,
+body {
+  position: relative;
+}
+
+body * {
+  display: block;
+}
+
+script,
+link {
+  display: none;
+}
+
+/*base*/
+
+body {
+  display: relative;
+  background: #fffcf4;
+}
+p {
+  display: inline-block;
+}
+
+h6 {
+  font-size: 1.3em;
+}
+h5 {
+  font-size: 1.4em;
+}
+h4 {
+  font-size: 1.5em;
+}
+h3 {
+  font-size: 1.7em;
+}
+h2 {
+  font-size: 2em;
+}
+h1 {
+  font-size: 2.3em;
+}
+
+pre {
+  white-space: pre;
+}
+span {
+  display: inline;
+}
+a {
+  display: inline;
+  color: #571133;
+}
+a:hover {
+  color: #38001c;
+}
+a:active,
+a:visited {
+  color: #38001c;
+}
+
+blockquote {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin-left: 4em;
+  margin-right: 4em;
+}
+
+hr {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  border: .05px solid #38001c;
+  font-weight: lighter;
+  color: #38001c;
+}
+
+strong {
+  font-weight: bold;
+  display: inline;
+}
+
+em {
+  font-style: italic;
+}
+
+input {
+  padding: 0.5em;
+  border: 1px solid #571133;
+  margin-bottom: 0.5em;
+}
+
+textarea:focus,
+input:focus,
+input[type="text"]:focus {
+  border: 1px solid #38001c;
+}
+textarea {
+  resize: none;
+}
+button,
+input[type="submit"] {
+  padding: 0.5em;
+  border: 1px solid #571133;
+  background: #fffcf4;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  border: 1px solid #571133;
+  background: #38001c;
+}
+
+button:active,
+input[type="submit"]:active {
+  border: 1px solid #571133;
+  background: #38001c;
+}
+
+img {
+  width: 10%;
+  margin-top: 5%;
+}
+
+#topics {
+  width: 70%;
+  position: relative;
+  left: 15%;
+}
+
+.red {
+  border: 1px solid red;
+}
+/*modal*/
+
+.modal {
+  position: fixed;
+  height: 100%;
+  background: rgba(100, 100, 100, 0.7);
+}
+
+.modal main {
+  position: fixed;
+  padding: 0.5em;
+  height: 50%;
+  width: 50%;
+  background: #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal button {
+  position: fixed;
+  top: 1em;
+  right: 1em;
+  width: auto;
+  padding: 1em;
+  background: #aaa;
+}
