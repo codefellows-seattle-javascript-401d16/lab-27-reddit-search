@@ -1,6 +1,11 @@
 $color-main: #daf7a6;
 $color-button: #ffc300;
 $color-button-line: #ff5733;
+$color-error: #c70039;
+$color-link: #C70039;
+$color-link-visited: #900C3F;
+$color-link-hover: #FF5733;
+$color-link-active: #581845;
 // #ffc300
 // #ff5733
 // #c70039
@@ -40,4 +45,58 @@ h1 {
   width: 80px;
   background-color: $color-button;
   border: 2px solid $color-button-line;
+}
+.error {
+  text-align: center;
+  font-family: sans-serif, serif;
+  color: $color-error;
+  margin-top: 10px;
+}
+.error input[type=text]{
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  border: 2px solid $color-error;
+  margin-right: 10px;
+  font-size: 16px;
+  padding-left: 20px;
+}
+.error button {
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px;
+  height: 30px;
+  width: 80px;
+  background-color: $color-button;
+  border: 2px solid $color-button-line;
+}
+.result-box {
+  border: 2px solid #000;
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 10px;
+  border-radius: 10px;
+  background: #fff;
+}
+a:link {
+    font-size: 16px;
+    font-family: sans-serif, serif;
+    color: $color-link;
+    text-decoration: none;
+}
+a:visited {
+  color: $color-link-visited;
+  text-decoration: none;
+}
+a:hover {
+  color: $color-link-hover;
+  text-decoration: none;
+}
+a:active {
+  color: $color-link-active;
+  text-decoration: none;
+}
+ul {
+  padding-bottom: 5px;
+  list-style: url("https://cdn4.iconfinder.com/data/icons/spirit20/article-edit.png");
 }

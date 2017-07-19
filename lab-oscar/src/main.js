@@ -7,6 +7,8 @@ class SearchForm extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      error: null,
+      errorMsg: null,
       boardName: '',
       numberLimit: '',
       sample: '',
@@ -20,19 +22,30 @@ class SearchForm extends React.Component{
 
 
  handleBoardNameChange(e){
-   this.setState({boardName: e.target.value})
+   this.setState({boardName: e.target.value, error: false})
  }
  handleLimit(e){
    this.setState({numberLimit: e.target.value})
  }
  handleSubmit(e){
    e.preventDefault()
-   this.props.boardNameSelect(this.state.boardName, this.state.numberLimit);
+   superagent.get(`https://www.reddit.com/r/${this.state.boardName}.json?limit=${this.state.numberLimit}`)
+   .then(res => {
+     this.props.boardNameSelect(res.body.data.children);
+   })
+   .catch(res => {
+     this.setState({
+       error: true,
+       errorMsg: 'Please try again!',
+     })
+   })
  }
 
   render(){
     return (
-      <form onSubmit={this.handleSubmit} className='input-fields'>
+      <div>
+        {this.state.errorMsg ? <div className='error'>{this.state.errorMsg}</div> : ''}
+      <form onSubmit={this.handleSubmit} className={!this.state.error ? 'input-fields' : 'error'}>
         <input
           type='text'
           name='redditBoard'
@@ -49,6 +62,7 @@ class SearchForm extends React.Component{
         />
         <button onClick={this.handleSubmit}>Submit</button>
       </form>
+    </div>
     )
   }
 
@@ -86,15 +100,10 @@ class App extends React.Component{
     this.boardNameSelect = this.boardNameSelect.bind(this)
   }
 
-  boardNameSelect(name, limit){
-    console.log('this', name, limit)
-    superagent.get(`https://www.reddit.com/r/${name}.json?limit=${limit}`)
-    .then(res => {
-      // let topic = res.body.data.children;
+  boardNameSelect(result){
       this.setState({
-         topic: res.body.data.children,
+         topic: result,
        })
-    })
   }
 
 
@@ -106,7 +115,9 @@ class App extends React.Component{
         <h1>Welcome!</h1>
         <SearchForm boardNameSelect={this.boardNameSelect}/>
         </div>
+        <div className='result-box'>
         <SearchResultList topic={this.state.topic}/>
+        </div>
       </div>
     )
   }
