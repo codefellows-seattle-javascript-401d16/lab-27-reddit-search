@@ -12,7 +12,7 @@ class SearchForm extends React.Component {
       topics: [],
       worked: true,
       searchFormBoard: '',
-      searchFormLimit: 0
+      searchFormLimit: ''
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -56,7 +56,7 @@ class SearchForm extends React.Component {
           className={this.state.worked ? 'notRed' : 'red'}
           type="text"
           name="board"
-          placeholder="reddit board name"
+          placeholder="subreddit name"
           value={this.state.searchFormBoard}
           onChange={this.handleBoardNameChange}
         />
@@ -66,7 +66,7 @@ class SearchForm extends React.Component {
           name="limit"
           min="1"
           max="100"
-          placeholder="view limit"
+          placeholder="number of results to view"
           value={this.state.searchFormLimit}
           onChange={this.handleBoardLimitChange}
         />
