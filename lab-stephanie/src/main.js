@@ -30,16 +30,14 @@ class SearchForm extends React.Component {
 
     this.props.redditBoardSelect(this.state.searchFormBoard);
 
-    console.log('running get request');
     superagent
       .get(
         `${API_URL}/${this.state.searchFormBoard}.json?limit=${this.state
           .searchFormLimit - 1}`
       )
       .then(res => {
-        console.log('res.body', res.body);
         let posts = res.body.data.children;
-        console.log('posts', posts);
+
         return this.props.renderposts(posts);
       })
       .catch(console.error);
@@ -79,7 +77,6 @@ class SearchResultList extends React.Component {
     return (
       <ul>
         {this.props.redditTopics.map((n, i) => {
-          console.log('building app');
           return (
             <li key={i}>
               <a href={n.data.url}>
@@ -112,17 +109,11 @@ class App extends React.Component {
     this.renderPosts = this.renderPosts.bind(this);
   }
 
-  componentDidUpdate() {
-    console.log('___STATE___', this.state);
-  }
-
   renderPosts(posts) {
-    console.log('postsAppRender', posts);
     this.setState({ topics: posts });
   }
 
   redditBoardSelect(name) {
-    console.log('cool beans');
     if (!this.state.topics[name]) {
       this.setState({
         redditBoardSelected: null,
@@ -132,7 +123,6 @@ class App extends React.Component {
       superagent
         .get(this.state.topics[name])
         .then(res => {
-          console.log('selected board', res.body);
           this.setState({
             redditBoardSelected: res.body,
             redditBoardNameError: null
@@ -145,7 +135,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1> form demo </h1>
+        <h1> Find SubReddit</h1>
 
         <SearchForm
           redditBoardSelect={this.redditBoardSelect}
