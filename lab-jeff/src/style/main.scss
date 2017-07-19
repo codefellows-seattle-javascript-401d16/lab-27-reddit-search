@@ -1,0 +1,43 @@
+$color-primary: #999b1f;
+
+* {
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 1em;
+}
+
+body {
+  background: $color-primary;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+.redditSearch {
+  width: 40%;
+  margin-bottom: .5em;
+  border-radius: .4em;
+  padding-left: .5em;
+}
+
+.numberInput {
+  width: 40%;
+  margin-bottom: .5em;
+  border-radius: .4em;
+  padding-left: .5em;
+  display: block;
+}
+
+.submitButton {
+  width: 10%;
+}
+
+.err {
+  width: 40%;
+  margin-bottom: .5em;
+  border-radius: .4em;
+  padding-left: .5em;
+  border-color: red;
+  border-width: 2px;
+}
