@@ -19,19 +19,15 @@ class SearchForm extends React.Component {
   }
 
   handleTextInputChange(e){
-    // console.log('textChange', this);
     this.setState({textInput: e.target.value})
   }
 
   handleNumberInputChange(e){
-    // console.log('numberChange', this);
     this.setState({numberInput: e.target.value})
   }
 
   handleSubmit(e){
     e.preventDefault()
-    console.log('handleSubmit', e);
-
     this.props.searchReddit(this.state.textInput, this.state.numberInput);
  }
 
@@ -107,7 +103,6 @@ class App extends React.Component {
       this.setState({
         topics: res.body.data.children
       })
-      // console.log('superagent result', this.state.topics);
     })
   }
 
