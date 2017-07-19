@@ -1,0 +1,24 @@
+$color-primary: #ff7a7a;
+
+* {
+  box-sizing: border-box;
+  width: 100%;
+//   font-size: 1em;
+  white-space: pre-wrap;
+}
+
+
+body {
+  background: $color-primary;
+  font-size: 16px;
+}
+
+.err {
+  border-color: red;
+  border-width: 3px;
+}
+
+form {
+  width: 25%;
+
+}
