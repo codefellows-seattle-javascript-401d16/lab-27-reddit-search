@@ -31,15 +31,13 @@ class SearchForm extends React.Component {
   handleSubmit(e){
     e.preventDefault()
     console.log('handleSubmit', e);
-    superagent.get(`${API_URL}/${this.state.textInput}.json?limit=${this.state.numberInput}`)
-    .then(res => {
-      console.log('superagent result', res);
-  })
+
+    this.props.searchReddit(this.state.textInput, this.state.numberInput);
  }
 
   render(){
     return (
-      <form onSubmit={this.handleSubmit} >
+      <form>
         <input
           type='text'
           name='redditSearch'
@@ -67,7 +65,31 @@ class SearchForm extends React.Component {
 }
 
 class SearchResultList extends React.Component {
-
+  constructor(props){
+    super(props);
+    this.state = {
+    }
+  }
+  render(){
+    let listItems = this.props.topics.map((item) => {
+      return (
+        <li>
+          <a href={`http://www.reddit.com/${item.data.permalink}`} key={item.data.id} target="_blank">
+            <h1>{item.data.title}</h1>
+            <p>{item.data.ups}</p>
+          </a>
+        </li>
+      )
+    })
+    return (
+      <div>
+        <h1> Results </h1>
+        <ul>
+            {listItems}
+        </ul>
+      </div>
+    )
+  }
 }
 
 class App extends React.Component {
@@ -76,14 +98,27 @@ class App extends React.Component {
     this.state = {
       topics: [],
     }
+    this.searchReddit = this.searchReddit.bind(this);
   }
+
+  searchReddit(name, limit){
+    superagent.get(`${API_URL}/${name}.json?limit=${limit}`)
+    .then(res => {
+      this.setState({
+        topics: res.body.data.children
+      })
+      console.log('superagent result', this.state.topics);
+    })
+  }
+
   render(){
     return (
       <div>
         <h1> Search Reddit </h1>
 
-        <SearchForm />
+        <SearchForm searchReddit={this.searchReddit} />
 
+        <SearchResultList topics={this.state.topics}/>
       </div>
     )
   }
