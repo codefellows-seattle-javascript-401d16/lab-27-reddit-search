@@ -1,3 +1,4 @@
+import './style/main.scss';
 import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
@@ -7,10 +8,12 @@ class SearchForm extends React.Component {
     super(props)
     this.state = {
       subReddit: '',
+      numOfResults: '',
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleSubReddit = this.handleSubReddit.bind(this)
+    this.handleNumberOfResults = this.handleNumberOfResults.bind(this)
   }
 
 
@@ -18,14 +21,18 @@ class SearchForm extends React.Component {
     this.setState({subReddit: e.target.value})
   }
 
+  handleNumberOfResults(e){
+    this.setState({numOfResults: e.target.value})
+  }
+
   handleSubmit(e){
     e.preventDefault()
-    this.props.boardSelect(this.state.subReddit)
+    this.props.boardSelect(this.state.subReddit, this.state.numOfResults)
   }
 
   render(){
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form >
         <input
           type='text'
           name='subReddit'
@@ -35,12 +42,17 @@ class SearchForm extends React.Component {
           />
           <input
             type='number'
-            name='resNumber'
+            name='numOfResults'
             placeholder='1-100'
             min='1'
             max='100'
-            value={this.state.subReddit}
-            onChange={this.handleSubReddit}
+            value={this.state.numOfResults}
+            onChange={this.handleNumberOfResults}
+            />
+          <input
+            type='submit'
+            name='submitButton'
+            onClick={this.handleSubmit}
             />
       </form>
     )
@@ -60,9 +72,10 @@ class App extends React.Component {
 
   }
 
-  boardSelect(boardName){
-    superagent.get(`http://www.reddit.com/r/${boardName}.json`)
+  boardSelect(boardName, numOfResults){
+    superagent.get(`http://www.reddit.com/r/${boardName}.json?limit=${numOfResults}`)
     .then(res => {
+      console.log(this.state);
       this.setState({
         topics: res.body.data.children,
         boardSelected: res.body,
