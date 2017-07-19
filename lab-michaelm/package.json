@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "lint": "eslint .",
     "build": "webpack",
     "watch": "webpack-dev-server --inline --hot"
   },
@@ -12,10 +13,8 @@
     "babel-loader": "^7.1.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "cowsay-browser": "^1.1.8",
     "css-loader": "^0.28.4",
     "extract-text-webpack-plugin": "^3.0.0",
-    "faker": "^4.1.0",
     "html-webpack-plugin": "^2.29.0",
     "node-sass": "^4.5.3",
     "react": "^15.6.1",
