@@ -71,7 +71,6 @@ class App extends React.Component {
     superagent.get(`http://www.reddit.com/r/${board}.json?limit=${limit}`)
       .then(res => {
         const searchResults = res.body.data.children.map(v => {
-          console.log(v)
           const title = v.data.title;
           const upvotes = v.data.ups;
           const url = v.data.url;
