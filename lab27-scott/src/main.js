@@ -25,7 +25,6 @@ class SearchForm extends React.Component{
 //after data is inputted and saved in the new state, on submit will make a key value pair of the new data
   handleOnFormSubmit(e){
     e.preventDefault();
-    console.log('form was submitted');
     this.props.handleRedditRequest(this.state.searchFormBoard, this.state.searchFormLimit)
   }
 
@@ -72,9 +71,7 @@ class App extends React.Component{
   handleRedditRequest(searchFormBoard, searchFormLimit){
     superagent.get(`http://www.reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`)
     .then(res => {
-      console.log('children', res.body.data.children);
-      this.setState({topics: [res.body.data.children]});
-      console.log(this.state.topics);
+      this.setState({topics: res.body.data.children});
     })
     .catch(err => console.log(err))
   };
@@ -98,19 +95,20 @@ class SearchResultList extends React.Component{
   }
 
   render(){
-    console.log('result props break topics', this.props.topics);
+
     let redditList = this.props.topics.map((item, i) => {
-      console.log('item.data.url', item);
       return (
         <li key={i}>
-          <a href={item[i].data.url}>
-            <h1>{item[i].data.title}</h1>
-            <p>{item[i].data.ups}</p>
+          <a href={item.data.url}>
+            <h1>{item.data.title}</h1>
+            <p>{item.data.ups}</p>
           </a>
+          <img src={item.data.thumbnail} />
         </li>
       )
     })
-    return(
+
+    return (
       <div>
         <ul>
           {redditList}
