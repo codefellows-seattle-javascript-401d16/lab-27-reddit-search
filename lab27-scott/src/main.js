@@ -11,21 +11,22 @@ class SearchForm extends React.Component{
     }
     this.handleBoardNameChange = this.handleBoardNameChange.bind(this);
     this.handleResultsLimitChange = this.handleResultsLimitChange.bind(this);
+    this.handleOnFormSubmit = this.handleOnFormSubmit.bind(this);
   };
 
 
 //on input change handlers
   handleBoardNameChange(e){
-    this.setState = {searchFormBoard: e.target.value}
+    this.setState({searchFormBoard: e.target.value})
   }
   handleResultsLimitChange(e){
-    this.setState = {searchFormLimit: e.target.value}
+    this.setState({searchFormLimit: e.target.value})
   }
 //after data is inputted and saved in the new state, on submit will make a key value pair of the new data
   handleOnFormSubmit(e){
     e.preventDefault();
-    this.props.boardSelect(this.state.searchFormBoard)
-    this.props.limitSelect(this.state.searchFormLimit)
+    console.log('form was submitted');
+    this.props.handleRedditRequest(this.state.searchFormBoard, this.state.searchFormLimit)
   }
 
   render(){
@@ -48,6 +49,7 @@ class SearchForm extends React.Component{
           value = {this.state.searchFormLimit}
           onChange = {this.handleResultsLimitChange}
           />
+          <input type='submit' name='submit' value='submit' onClick={this.handleOnFormSubmit}/>
         </form>
       </div>
     )
@@ -63,13 +65,23 @@ class App extends React.Component{
       topics: [],
     }
     //put this. methods here
+    this.handleRedditRequest = this.handleRedditRequest.bind(this);
+  };
+
+  //request to reddit from onsubmit handler in search form
+  handleRedditRequest(searchFormBoard, searchFormLimit){
+    superagent.get(`http://www.reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`)
+    .then(res => {
+      console.log('res.body', res.body);
+    })
+    .catch(err => console.log(err))
   };
 
   render(){
     return (
       <div>
         <h1>Reddit Board Search</h1>
-        <SearchForm />
+        <SearchForm handleRedditRequest={this.handleRedditRequest}/>
       </div>
     )
   }
