@@ -2,40 +2,99 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
 
-const API_URL = 'http://reddit.com/r';
+const API_URL = 'http://www.reddit.com/r';
 
 class SearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      topics: [],
       searchFormBoard: '',
-      searchFormLimit: 1
+      searchFormLimit: 0
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handlePokeNameChange = this.handlePokeNameChange.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleBoardNameChange = this.handleBoardNameChange.bind(this);
+    this.handleBoardLimitChange = this.handleBoardLimitChange.bind(this);
   }
 
-  handlePokeNameChange(e) {
+  handleBoardNameChange(e) {
     this.setState({ searchFormBoard: e.target.value });
   }
+  handleBoardLimitChange(e) {
+    this.setState({ searchFormLimit: e.target.value });
+  }
 
-  handleSubmit(e) {
+  handleClick(e) {
     e.preventDefault();
-    this.props.pokemonSelect(this.state.searchFormBoard);
+
+    this.props.redditBoardSelect(this.state.searchFormBoard);
+
+    console.log('running get request');
+    superagent
+      .get(
+        `${API_URL}/${this.state.searchFormBoard}.json?limit=${this.state
+          .searchFormLimit - 1}`
+      )
+      .then(res => {
+        console.log('res.body', res.body);
+        let posts = res.body.data.children;
+        console.log('posts', posts);
+        return this.props.renderposts(posts);
+      })
+      .catch(console.error);
   }
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form>
         <input
           type="text"
-          name="pokemonName"
-          placeholder="poke name"
+          name="board"
+          placeholder="reddit board name"
           value={this.state.searchFormBoard}
-          onChange={this.handlePokeNameChange}
+          onChange={this.handleBoardNameChange}
         />
+        <input
+          type="number"
+          name="limit"
+          min="1"
+          max="100"
+          placeholder="view limit"
+          value={this.state.searchFormLimit}
+          onChange={this.handleBoardLimitChange}
+        />
+        <button onClick={this.handleClick}>search reddit</button>
       </form>
+    );
+  }
+}
+
+class SearchResultList extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <ul>
+        {this.props.redditTopics.map((n, i) => {
+          console.log('building app');
+          return (
+            <li key={i}>
+              <a href={n.data.url}>
+                <img src={n.data.thumbnail} />
+                <h3>
+                  {n.data.title}
+                </h3>
+                <p>
+                  ups: {n.data.ups}
+                </p>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     );
   }
 }
@@ -44,62 +103,39 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pokemonLookup: {},
-      pokemonSelected: null,
-      pokemonNameError: null
+      topics: [],
+      redditBoardSelected: null,
+      redditBoardNameError: null
     };
 
-    this.pokemonSelect = this.pokemonSelect.bind(this);
+    this.redditBoardSelect = this.redditBoardSelect.bind(this);
+    this.renderPosts = this.renderPosts.bind(this);
   }
 
   componentDidUpdate() {
     console.log('___STATE___', this.state);
   }
 
-  componentDidMount() {
-    console.log('hello wrold');
-    if (localStorage.pokemonLookup) {
-      try {
-        let pokemonLookup = JSON.parse(localStorage.pokemonLookup);
-        this.setState({ pokemonLookup });
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
-      superagent
-        .get(`${API_URL}/${searchFormBoard}.json?limit=${searchFormLimit}`)
-        .then(res => {
-          let pokemonLookup = res.body.results.reduce((lookup, n) => {
-            lookup[n.name] = n.url;
-            return lookup;
-          }, {});
-
-          try {
-            localStorage.pokemonLookup = JSON.stringify(pokemonLookup);
-            this.setState({ pokemonLookup });
-          } catch (err) {
-            console.error(err);
-          }
-        })
-        .catch(console.error);
-    }
+  renderPosts(posts) {
+    console.log('postsAppRender', posts);
+    this.setState({ topics: posts });
   }
 
-  pokemonSelect(name) {
+  redditBoardSelect(name) {
     console.log('cool beans');
-    if (!this.state.pokemonLookup[name]) {
+    if (!this.state.topics[name]) {
       this.setState({
-        pokemonSelected: null,
-        pokemonNameError: name
+        redditBoardSelected: null,
+        redditBoardNameError: name
       });
     } else {
       superagent
-        .get(this.state.pokemonLookup[name])
+        .get(this.state.topics[name])
         .then(res => {
-          console.log('selected pokemon', res.body);
+          console.log('selected board', res.body);
           this.setState({
-            pokemonSelected: res.body,
-            pokemonNameError: null
+            redditBoardSelected: res.body,
+            redditBoardNameError: null
           });
         })
         .catch(console.error);
@@ -111,39 +147,11 @@ class App extends React.Component {
       <div>
         <h1> form demo </h1>
 
-        <SearchForm pokemonSelect={this.pokemonSelect} />
-
-        {this.state.pokemonNameError
-          ? <div>
-              <h2>
-                pokemon {this.state.pokemonNameError} does not exist
-              </h2>
-              <p> make another request ! </p>
-            </div>
-          : <div>
-              {this.state.pokemonSelected
-                ? <div>
-                    <h2>
-                      selected {this.state.pokemonSelected.name}
-                    </h2>
-                    <p> booyea </p>
-                    <h3> abilities </h3>
-                    <ul>
-                      {this.state.pokemonSelected.abilities.map((item, i) => {
-                        return (
-                          <li key={i}>
-                            <p>
-                              {item.ability.name}
-                            </p>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                : <div>
-                    <p> make a request </p>
-                  </div>}
-            </div>}
+        <SearchForm
+          redditBoardSelect={this.redditBoardSelect}
+          renderposts={this.renderPosts}
+        />
+        <SearchResultList redditTopics={this.state.topics} />
       </div>
     );
   }
