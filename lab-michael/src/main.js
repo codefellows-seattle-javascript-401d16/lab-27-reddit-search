@@ -4,25 +4,25 @@ import superagent from 'superagent'
 
 const API_URL = 'http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}'
 
-class redditForm extends React.Component {
+class RedditForm extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       searchName: '',
-      searchFormLimit:0,
+      searchFormLimit: '',
 
     }
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSearchChange = this.handleSearchChange.bind(this);
   }
 
-  this.handleSubmit = this.handleSubmit.bind(this);
-  this.handleSearchChange = this.handleSearchChange.bind(this);
 
   handleSearchChange(e){
     this.setState({searchName : e.target.value})
   }
 
   handleLimitChange(e){
-    this.setState({searchLimit : e.target.value})
+    this.setState({searchFormLimit : e.target.value})
   }
 
   handleSubmit(e){
@@ -44,10 +44,9 @@ class redditForm extends React.Component {
       type='text'
       name='redditSearch'
       placeholder='reddit topic number!!!'
-      value = {this.state.searchName}
+      value = {this.state.searchFormLimit}
       onChange = {this.handleLimitChange}
       />
-
       </form>
     )
   }
@@ -68,8 +67,9 @@ class App extends React.Component {
     superagent.get(`http://reddit.com/r/${searchName}.json?limit=${searchLimit}`)
     .then(res => {
       this.setState({
-        redditLookup: 
+        redditLookup: res.body.data
       })
+      console.log(res.body.data)
     })
     .catch(console.error)
   }
@@ -78,11 +78,8 @@ class App extends React.Component {
     return(
       <div>
         <h1> REDDIT SEARCH </h1>
-        <redditForm redditSearch={this.redditSearch} /> //what is this doing exactly
+        <RedditForm redditSearch={this.redditSearch} />
       </div>
-
-      <div>
-        <h2> you selected {this.state.search}
     )
   }
 }
