@@ -32,7 +32,6 @@ class SearchForm extends React.Component {
   }
 
   render(){
-    console.log(this.props);
     return (
       <form >
         <input
@@ -78,7 +77,6 @@ class App extends React.Component {
   boardSelect(boardName, numOfResults){
     superagent.get(`http://www.reddit.com/r/${boardName}.json?limit=${numOfResults}`)
     .then(res => {
-      console.log(this.state);
       this.setState({
         topics: res.body.data.children,
         boardSelected: res.body,
@@ -108,7 +106,6 @@ class SearchResultList extends React.Component {
   }
 
   render(){
-    console.log(this.props.results);
     return(
       <ul>
        {this.props.results.map((item, i) => {
