@@ -73,8 +73,8 @@ class SearchResultList extends React.Component {
   render(){
     let listItems = this.props.topics.map((item) => {
       return (
-        <li>
-          <a href={`http://www.reddit.com/${item.data.permalink}`} key={item.data.id} target="_blank">
+        <li key={item.data.id}>
+        <a href={`http://www.reddit.com/${item.data.permalink}`}  target="_blank">
             <h1>{item.data.title}</h1>
             <p>{item.data.ups}</p>
           </a>
