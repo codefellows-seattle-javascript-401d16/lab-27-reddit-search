@@ -1,3 +1,4 @@
+import './style/main.scss';
 import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
@@ -9,6 +10,7 @@ class SearchForm extends React.Component {
     super(props);
     this.state = {
       topics: [],
+      worked: true,
       searchFormBoard: '',
       searchFormLimit: 0
     };
@@ -36,17 +38,22 @@ class SearchForm extends React.Component {
           .searchFormLimit - 1}`
       )
       .then(res => {
+        this.setState({ worked: true });
         let posts = res.body.data.children;
 
         return this.props.renderposts(posts);
       })
-      .catch(console.error);
+      .catch(err => {
+        console.log(err);
+        this.setState({ worked: false });
+      });
   }
 
   render() {
     return (
       <form>
         <input
+          className={this.state.worked ? 'notRed' : 'red'}
           type="text"
           name="board"
           placeholder="reddit board name"
@@ -54,6 +61,7 @@ class SearchForm extends React.Component {
           onChange={this.handleBoardNameChange}
         />
         <input
+          className={this.state.worked ? 'notRed' : 'red'}
           type="number"
           name="limit"
           min="1"
@@ -75,7 +83,7 @@ class SearchResultList extends React.Component {
 
   render() {
     return (
-      <ul>
+      <ul id="topics">
         {this.props.redditTopics.map((n, i) => {
           return (
             <li key={i}>
