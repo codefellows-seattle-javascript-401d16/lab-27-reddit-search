@@ -36,7 +36,7 @@ class SearchForm extends React.Component {
       <form>
         <input
           type='text'
-          className='redditSearch'
+          className={this.props.hasError ? 'err' : 'redditSearch'}
           name='redditSearch'
           placeholder='search Reddit'
           value={this.state.textInput}
@@ -48,7 +48,7 @@ class SearchForm extends React.Component {
           name='numberInput'
           min='0'
           max='100'
-          placeholder='number of search results (maximum 100)'
+          placeholder='number of results requested (maximum 100)'
           value={this.state.numberInput}
           onChange={this.handleNumberInputChange}
           />
