@@ -72,7 +72,9 @@ class App extends React.Component{
   handleRedditRequest(searchFormBoard, searchFormLimit){
     superagent.get(`http://www.reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`)
     .then(res => {
-      console.log('res.body', res.body);
+      console.log('children', res.body.data.children);
+      this.setState({topics: [res.body.data.children]});
+      console.log(this.state.topics);
     })
     .catch(err => console.log(err))
   };
