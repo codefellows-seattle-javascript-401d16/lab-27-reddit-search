@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDom from 'react-dom'
 import superagent from 'superagent'
+import './style/main.scss'
 
 const API_URL = 'http://www.reddit.com/r'
 
@@ -36,6 +37,7 @@ class SearchForm extends React.Component {
       <form>
         <input
           type='text'
+          className={this.props.hasError ? 'err' : ''}
           name='redditSearch'
           placeholder='search reddit'
           value={this.state.textInput}
@@ -72,6 +74,7 @@ class SearchResultList extends React.Component {
         <li key={item.data.id}>
         <a href={`http://www.reddit.com/${item.data.permalink}`}  target="_blank">
             <h1>{item.data.title}</h1>
+            <img src={item.data.thumbnail}/>
             <p>{item.data.ups}</p>
           </a>
         </li>
@@ -93,6 +96,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       topics: [],
+      hasError: false,
     }
     this.searchReddit = this.searchReddit.bind(this);
   }
@@ -100,8 +104,15 @@ class App extends React.Component {
   searchReddit(name, limit){
     superagent.get(`${API_URL}/${name}.json?limit=${limit}`)
     .then(res => {
+      console.log('res', res.body);
       this.setState({
         topics: res.body.data.children
+      })
+    })
+    .catch(err => {
+      console.log('err', err);
+      this.setState({
+        hasError: true
       })
     })
   }
@@ -111,7 +122,9 @@ class App extends React.Component {
       <div>
         <h1> Search Reddit </h1>
 
-        <SearchForm searchReddit={this.searchReddit} />
+        <SearchForm
+        searchReddit={this.searchReddit}
+        hasError={this.state.hasError} />
 
         <SearchResultList topics={this.state.topics}/>
       </div>
