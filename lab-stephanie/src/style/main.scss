@@ -1,3 +1,7 @@
+$color-background: #fffcf4;
+$color-primary: #571133;
+$color-secondary: #38001c;
+
 * {
   margin: 0;
   padding: 0;
@@ -37,7 +41,7 @@ link {
 
 body {
   display: relative;
-  background: #fffcf4;
+  background: $color-background;
 }
 p {
   display: inline-block;
@@ -70,14 +74,14 @@ span {
 }
 a {
   display: inline;
-  color: #571133;
+  color: $color-primary;
 }
 a:hover {
-  color: #38001c;
+  color: $color-secondary;
 }
 a:active,
 a:visited {
-  color: #38001c;
+  color: $color-secondary;
 }
 
 blockquote {
@@ -92,9 +96,9 @@ hr {
   margin-right: auto;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  border: .05px solid #38001c;
+  border: .05px solid $color-secondary;
   font-weight: lighter;
-  color: #38001c;
+  color: $color-secondary;
 }
 
 strong {
@@ -108,14 +112,14 @@ em {
 
 input {
   padding: 0.5em;
-  border: 1px solid #571133;
+  border: 1px solid $color-primary;
   margin-bottom: 0.5em;
 }
 
 textarea:focus,
 input:focus,
 input[type="text"]:focus {
-  border: 1px solid #38001c;
+  border: 1px solid $color-secondary;
 }
 textarea {
   resize: none;
@@ -123,20 +127,20 @@ textarea {
 button,
 input[type="submit"] {
   padding: 0.5em;
-  border: 1px solid #571133;
-  background: #fffcf4;
+  border: 1px solid $color-primary;
+  background: $color-background;
 }
 
 button:hover,
 input[type="submit"]:hover {
-  border: 1px solid #571133;
-  background: #38001c;
+  border: 1px solid $color-primary;
+  background: $color-secondary;
 }
 
 button:active,
 input[type="submit"]:active {
-  border: 1px solid #571133;
-  background: #38001c;
+  border: 1px solid $color-primary;
+  background: $color-secondary;
 }
 
 img {
