@@ -14,6 +14,7 @@ class RedditForm extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSearchChange = this.handleSearchChange.bind(this);
+    this.handleLimitChange = this.handleLimitChange.bind(this);
   }
 
 
@@ -27,6 +28,7 @@ class RedditForm extends React.Component {
 
   handleSubmit(e){
     e.preventDefault()
+    console.log(this.state.searchName)
     this.props.redditSearch(this.state.searchName, this.state.searchFormLimit)
   }
 
@@ -41,12 +43,17 @@ class RedditForm extends React.Component {
       />
 
       <input
-      type='text'
-      name='redditSearch'
-      placeholder='reddit topic number!!!'
+      type = 'text'
+      name = 'redditSearch'
+      min = '0'
+      max = '100'
+      placeholder = 'reddit topic number!!!'
       value = {this.state.searchFormLimit}
       onChange = {this.handleLimitChange}
       />
+      <button
+        onClick = {this.handleSubmit} > Search !
+      </button>
       </form>
     )
   }
@@ -56,7 +63,6 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      redditLookup: [],
       redditSearchResult: null,
       redditSearchError:null,
     }
@@ -64,14 +70,24 @@ class App extends React.Component {
     this.redditSearch = this.redditSearch.bind(this)
   }
   redditSearch(searchName, searchLimit){
-    superagent.get(`http://reddit.com/r/${searchName}.json?limit=${searchLimit}`)
+    console.log(searchName, searchLimit);
+    superagent.get(`https://www.reddit.com/r/${searchName}.json?limit=${searchLimit}`)
     .then(res => {
+      console.log(res);
       this.setState({
-        redditLookup: res.body.data
+        redditSearchResult: res.body.data.children,
       })
-      console.log(res.body.data)
+      console.log(this.state.reddit);
+      this.state.redditSearchResult.map(object => {
+        console.log(object.title);
+      })
     })
-    .catch(console.error)
+    .catch(err => {
+      console.log(err);
+      this.setState({
+        redditSearchError:err,
+      })
+    })
   }
 
   render() {
@@ -79,8 +95,42 @@ class App extends React.Component {
       <div>
         <h1> REDDIT SEARCH </h1>
         <RedditForm redditSearch={this.redditSearch} />
+
+      {this.state.redditSearchResult ?
+        <div>
+          <h2> reddit search results! </h2>
+          <ul>
+          {this.state.redditSearchResult.map((object, i) => {
+            console.log(object);
+            return (
+
+              <li key={i}>
+              <a href={object.data.url}> <p> {object.data.title} </p> </a>
+              </li>
+            )
+          })}
+          </ul>
+        </div> :
+        <p> nope didnt work! Here is the error! {this.state.reddiSearchError} </p>
+      }
       </div>
+        // {this.state.SearchError ?
+        //   <div>
+        //     <h2> reddit search {this.state.redditSearchError} does not exist </h2>
+        //     <p> try again! </p>
+        //   </div> :
+        //   <div>
+        //   {this.state.redditSearchResult ?
+        //     <div>
+        //       <h2> search results for {this.state.redditSearchResult} ... </h2>
+        //   :
+        //   <div>
+        //     <p> make a request </p>
+        //   </div>
+        //   }
+        // }
     )
+
   }
 }
 

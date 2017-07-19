@@ -43,9 +43,9 @@ App
 * the state should have a topics array for holding the results of the search
 
 ###### SearchForm Component
-* should contain a text input for the user to supply a reddit board to look up
+* should contain a text input for the user to supply a reddit board to look up DONE
 * should contain a number input for the user to limit the number of results to return
-  * the number must be less than 0 and greater than 100
+  * the number must be less than 0 and greater than 100 DONE
 * `onSubmit` the form should make a request to reddit
   * it should make a get request to `http://reddit.com/r/${searchFormBoard}.json?limit=${searchFormLimit}`
   * on success it should pass the results to the application state
