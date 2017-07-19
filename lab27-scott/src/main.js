@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import superagent from 'superagent';
+import './style/main.scss';
 
 class SearchForm extends React.Component{
   constructor(props){
@@ -25,6 +26,7 @@ class SearchForm extends React.Component{
 //after data is inputted and saved in the new state, on submit will make a key value pair of the new data
   handleOnFormSubmit(e){
     e.preventDefault();
+    console.log('form was submitted');
     this.props.handleRedditRequest(this.state.searchFormBoard, this.state.searchFormLimit)
   }
 
@@ -33,6 +35,7 @@ class SearchForm extends React.Component{
       <div>
         <form>
           <input
+          className = {this.props.hasErr ? 'err' : ''}
           type = 'text'
           name = 'boardName'
           placeholder = 'Board Name'
@@ -62,6 +65,7 @@ class App extends React.Component{
 
     this.state = {
       topics: [],
+      hasErr: false,
     }
     //put this. methods here
     this.handleRedditRequest = this.handleRedditRequest.bind(this);
@@ -73,7 +77,9 @@ class App extends React.Component{
     .then(res => {
       this.setState({topics: res.body.data.children});
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      this.setState({hasErr: true})
+    })
   };
 
   render(){
@@ -81,7 +87,9 @@ class App extends React.Component{
       <div>
         <h1>Reddit Board Search</h1>
         <SearchForm handleRedditRequest={this.handleRedditRequest}/>
-        <SearchResultList topics={this.state.topics}/>
+        <SearchResultList
+        topics={this.state.topics}
+        hasErr={this.state.hasErr}/>
       </div>
     )
   }
@@ -95,27 +103,37 @@ class SearchResultList extends React.Component{
   }
 
   render(){
-
+    console.log('this props', this.props);
     let redditList = this.props.topics.map((item, i) => {
-      return (
+      return(
         <li key={i}>
-          <a href={item.data.url}>
-            <h1>{item.data.title}</h1>
-            <p>{item.data.ups}</p>
-          </a>
-          <img src={item.data.thumbnail} />
+        <a href={item.data.url}>
+        <h1>{item.data.title}</h1>
+        <p>{item.data.ups}</p>
+        </a>
+        <img src={item.data.thumbnail} />
         </li>
       )
     })
-
-    return (
+    return(
       <div>
-        <ul>
-          {redditList}
-        </ul>
-      </div>
-    )
-  }
+        {!this.props.hasErr ?
+          <div>
+
+              <div>
+                <ul>
+                  {redditList}
+                </ul>
+              </div>
+          </div>
+        :
+          <div>
+            console.log('break2');
+          </div>
+      }
+    </div>
+  )
+}
 }
 
 
