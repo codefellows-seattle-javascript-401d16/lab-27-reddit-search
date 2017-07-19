@@ -1,0 +1,43 @@
+$color-main: #daf7a6;
+$color-button: #ffc300;
+$color-button-line: #ff5733;
+// #ffc300
+// #ff5733
+// #c70039
+body{
+  background: $color-main;
+}
+h1 {
+  text-align: center;
+  font-size: 24px;
+  font-family: sans-serif,cursive,serif;
+}
+.search {
+  width: 50%;
+  background: #fff;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 2px solid #000;
+  margin-top: 20px;
+}
+.input-fields {
+  text-align: center;
+}
+.input-fields input[type=text]{
+  width: 40%;
+  height: 30px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  margin-right: 10px;
+  font-size: 16px;
+  padding-left: 20px;
+}
+.input-fields button {
+  display: block;
+  margin: 10px auto;
+  border-radius: 5px;
+  height: 30px;
+  width: 80px;
+  background-color: $color-button;
+  border: 2px solid $color-button-line;
+}
