@@ -5,8 +5,6 @@ import './style/main.scss'
 
 const API_URL = 'http://www.reddit.com/r'
 
-// create a form container component every time you create a form
-// a form container is a component that holds the state for a forms inputs
 class SearchForm extends React.Component {
   constructor(props){
     super(props);
