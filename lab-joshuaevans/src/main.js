@@ -114,8 +114,8 @@ class SearchResultList extends React.Component {
        {this.props.results.map((item, i) => {
         return (
         <li key={i}>
-        <a href={item.data.url}> <h3>{item.data.title}</h3>
-        <h2>{item.data.ups}</h2>
+        <a href={item.data.url}> <h2>{item.data.title}</h2>
+        <h1>{item.data.ups}</h1>
         </a>
         </li>
         )
