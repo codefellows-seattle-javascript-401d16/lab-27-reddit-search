@@ -2,6 +2,31 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
 
+class SearchResultList extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <ul>
+        {this.topics.map((item, i) => {
+                return (
+                  <li key={i}>
+                    <p> {item.title} </p>
+                    <p> {item.url} </p>
+                    <p> {item.ups} </p>
+                  </li>
+                )
+              })}
+        </ul>
+      </div>
+    );
+  }
+}
+
 class SearchForm extends React.Component {
 
   constructor(props) {
@@ -80,12 +105,13 @@ class App extends React.Component {
     })
     .catch(console.error());
   }
-
+  //TODO: you need a ternary to display nothing when a request has not been made yet.
   render() {
     return (
       <div>
         <h1>Reddit Search</h1>
         <SearchForm requestSubreddit={this.requestSubreddit}/>
+        <SearchResultList topics={this.state.topics}/>
       </div>
     );
   }
