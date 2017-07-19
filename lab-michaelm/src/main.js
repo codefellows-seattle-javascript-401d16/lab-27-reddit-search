@@ -9,22 +9,22 @@ class SearchForm extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      textInput: '',
-      numberInput: '',
+      subInput: '',
+      resultNumber: '',
     }
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleTextInputChange = this.handleTextInputChange.bind(this)
     this.handleNumberInputChange = this.handleNumberInputChange.bind(this)
   }
   handleTextInputChange(e) {
-    this.setState({textInput: e.target.value})
+    this.setState({subInput: e.target.value})
   }
   handleNumberInputChange(e) {
-    this.setState({numberInput: e.target.value})
+    this.setState({resultNumber: e.target.value})
   }
   handleSubmit(e) {
     e.preventDefault()
-    this.props.searchReddit(this.state.textInput, this.state.numberInput)
+    this.props.searchReddit(this.state.subInput, this.state.resultNumber)
   }
   render(){
     return (
@@ -33,15 +33,16 @@ class SearchForm extends React.Component {
           type='text'
           name='redditSearch'
           placeholder='search reddit'
-          value={this.state.textInput}
+          value={this.state.subInput}
           onChange={this.handleTextInputChange}
           />
         <input
           type='number'
-          name='numberInput'
+          name='resultNumber'
+          placeholder='#'
           min='0'
           max='100'
-          value={this.state.numberInput}
+          value={this.state.resultNumber}
           onChange={this.handleNumberInputChange}
           />
         <input
@@ -73,7 +74,7 @@ class SearchResultList extends React.Component {
       )
     })
     return (
-      <div>
+      <div className="results">
         <h1> Results </h1>
         <ul>
             {listItems}
@@ -103,7 +104,7 @@ class App extends React.Component {
 
   render(){
     return (
-      <div>
+      <div className="search-form">
         <h1> Search Reddit </h1>
 
         <SearchForm searchReddit={this.searchReddit} />

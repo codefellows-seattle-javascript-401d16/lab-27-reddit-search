@@ -1,6 +1,6 @@
-# Hacker Cow
+# Reddit Search
 
-Hacker cow knows just how to hack all the bits. Just ask hacker cow for advice.
+An extremely basic application for searching subreddits and limiting the number of results.
 
 ## Getting Started
 
