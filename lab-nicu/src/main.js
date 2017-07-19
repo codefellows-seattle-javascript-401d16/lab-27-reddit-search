@@ -2,10 +2,8 @@ import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
 
-const API_URL = 'https://reddit.com/r'
-
 class SearchForm extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       searchFormLimit: 0,
@@ -13,42 +11,38 @@ class SearchForm extends React.Component {
     }
     this.handleBoardChange = this.handleBoardChange.bind(this);
     this.handleFormLimitChange = this.handleFormLimitChange.bind(this);
-    this.handleFormSubmit = this.handleFormSubmit(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  handleBoardChange(){
-    this.setState({searchFormBoard: e.target.value})
+  handleBoardChange(e) {
+    this.setState({ searchFormBoard: e.target.value })
   }
 
-  handleFormLimitChange(){
-    this.setState({searchFormLimit: e.target.value})
+  handleFormLimitChange(e) {
+    this.setState({ searchFormLimit: e.target.value })
   }
-  handleFormSubmit(){
+  handleFormSubmit(e) {
     e.preventDefault();
-    superagent.get(`${API_URL}/${this.state.searchFormBoard}.json?limit=${this.state.searchFormLimit}`)
-      .then(res =>{
-        console.log('Request Result', res)
-      })
-      .catch(console.error)
+    this.props.searchBoard({boardName : this.state.searchFormBoard, limit: this.state.searchFormLimit})
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <form onSubmit={this.handleFormSubmit}>
         <input
-          type= 'text'
-          name= 'board'
-          placeholder= 'Name of Board'
-          value = {this.state.searchFormBoard}
-          onChange = {this.handleBoardChange}
+          type='text'
+          name='board'
+          placeholder='Name of Board'
+          value={this.state.searchFormBoard}
+          onChange={this.handleBoardChange}
         />
         <input
           type='number'
           name='formLimit'
-          min= '0'
-          max= '100'
-          value = {this.state.searchFormLimit}
-          onChange = {this.handleFormLimitChange}
+          min='0'
+          max='100'
+          value={this.state.searchFormLimit}
+          onChange={this.handleFormLimitChange}
         />
         <input
           type='submit'
@@ -63,6 +57,30 @@ class SearchForm extends React.Component {
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.searchBoard = this.searchBoard.bind(this);
   }
-  
+
+  searchBoard(info){
+    let {boardName, limit } = info;
+    console.log('Board Name =',boardName);
+    console.log('Limit =', limit);
+    superagent.get(`http://reddit.com/r/${boardName}.json?limit=${limit}`)
+      .then(res => {
+        console.log('Request Result', res)
+      })
+      .catch(console.error)
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Reddit Board Search</h1>
+        <SearchForm searchBoard={this.searchBoard}/>
+      </div>
+    )
+  }
 }
+
+const container = document.createElement('div');
+document.body.appendChild(container);
+ReactDom.render(<App />, container);
