@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+  "build": "webpack",
+   "watch": "webpack-dev-server --inline --hot",
   "dependencies": {
     "babel": "^6.23.0",
     "babel-core": "^6.25.0",
@@ -19,5 +22,6 @@
     "superagent": "^3.5.2",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1"
+  }
   }
 }

@@ -2,28 +2,35 @@ import React from 'react'
 import ReactDom from 'react-dom'
 import superagent from 'superagent'
 
-const API_URL = 'http://pokeapi.co/api/v2'
+const API_URL = 'http://reddit.com/r'
 
 // create a form container component every time you create a form
 // a form container is a component that holds the state for a forms inputs
-class PokemonForm extends React.Component {
+class RedditForm extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      pokeName: '',
+      textInput: '',
+      numberInput: '',
     }
 
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.handlePokeNameChange = this.handlePokeNameChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleTextInputChange = this.handleTextInputChange.bind(this);
+    this.handleNumberInputChange = this.handleNumberInputChange.bind(this);
   }
 
-  handlePokeNameChange(e){
-    this.setState({pokeName: e.target.value})
+  handleTextInputChange(e){
+    this.setState({textInput: e.target.value})
+  }
+
+  handleNumberInputChange(e){
+    this.setState({numberInput: e.target.value})
   }
 
   handleSubmit(e){
     e.preventDefault()
-    this.props.pokemonSelect(this.state.pokeName)
+    this.props.redditSelect(this.state.textInput, this.state.numberInput);
+
   }
 
   render(){
@@ -35,7 +42,7 @@ class PokemonForm extends React.Component {
       <form onSubmit={this.handleSubmit} >
         <input
           type='text'
-          name='pokemonName'
+          className={this.props}
           placeholder='poke name'
           value={this.state.pokeName}
           onChange={this.handlePokeNameChange}
