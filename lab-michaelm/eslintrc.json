@@ -22,7 +22,9 @@
     "es6": true,
     "node": true,
     "jest": true,
-    "browser": true
+    "browser": true,
+    "commonjs": true,
+    "mocha": true
   },
   "globals": {
     "__API_URI__": false,
