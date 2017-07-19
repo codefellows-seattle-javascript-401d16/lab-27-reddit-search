@@ -9,6 +9,7 @@ class SearchForm extends React.Component {
     this.state = {
       subReddit: '',
       numOfResults: '',
+      hasError: false
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -31,11 +32,13 @@ class SearchForm extends React.Component {
   }
 
   render(){
+    console.log(this.props);
     return (
       <form >
         <input
           type='text'
           name='subReddit'
+          className={this.props.err ? 'err' : ''}
           placeholder='enter a subreddit'
           value={this.state.subReddit}
           onChange={this.handleSubReddit}
@@ -82,12 +85,17 @@ class App extends React.Component {
         boardNameError: null,
       })
     })
+    .catch(err => {
+      this.setState({
+        hasError: true,
+      })
+    })
   }
 
   render(){
     return(
     <div>
-    <SearchForm boardSelect={this.boardSelect} />
+    <SearchForm err={this.state.hasError} boardSelect={this.boardSelect} />
     <SearchResultList results={this.state.topics}/>
     </div>
   )
