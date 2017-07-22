@@ -13,6 +13,7 @@ class SearchForm extends React.Component{
     this.handleBoardNameChange = this.handleBoardNameChange.bind(this);
     this.handleResultsLimitChange = this.handleResultsLimitChange.bind(this);
     this.handleOnFormSubmit = this.handleOnFormSubmit.bind(this);
+    console.log('FORM thisprops: ', this.props);
   };
 
 
@@ -25,8 +26,8 @@ class SearchForm extends React.Component{
   }
 //after data is inputted and saved in the new state, on submit will make a key value pair of the new data
   handleOnFormSubmit(e){
+    //this will prevent the whole page from reloaded. You would lose all state otherwise.
     e.preventDefault();
-    console.log('form was submitted');
     this.props.handleRedditRequest(this.state.searchFormBoard, this.state.searchFormLimit)
   }
 
@@ -43,6 +44,7 @@ class SearchForm extends React.Component{
           onChange = {this.handleBoardNameChange}
           />
           <input
+          className = {this.props.hasErr ? 'err' : ''}
           type = 'number'
           name = 'resultsLimit'
           min = '0'
@@ -51,7 +53,7 @@ class SearchForm extends React.Component{
           value = {this.state.searchFormLimit}
           onChange = {this.handleResultsLimitChange}
           />
-          <input type='submit' name='submit' value='submit' onClick={this.handleOnFormSubmit}/>
+          <input type='submit' name='submit' value='Submit' onClick={this.handleOnFormSubmit}/>
         </form>
       </div>
     )
@@ -86,10 +88,14 @@ class App extends React.Component{
     return (
       <div>
         <h1>Reddit Board Search</h1>
-        <SearchForm handleRedditRequest={this.handleRedditRequest}/>
+        <SearchForm
+          handleRedditRequest={this.handleRedditRequest}
+          hasErr={this.state.hasErr}
+        />
         <SearchResultList
-        topics={this.state.topics}
-        hasErr={this.state.hasErr}/>
+          topics={this.state.topics}
+          hasErr={this.state.hasErr}
+        />
       </div>
     )
   }
@@ -99,11 +105,9 @@ class SearchResultList extends React.Component{
   constructor(props){
     super(props);
     this.state ={};
-    console.log('result props', this.props);
   }
 
   render(){
-    console.log('this props', this.props);
     let redditList = this.props.topics.map((item, i) => {
       return(
         <li key={i}>
@@ -119,7 +123,6 @@ class SearchResultList extends React.Component{
       <div>
         {!this.props.hasErr ?
           <div>
-
               <div>
                 <ul>
                   {redditList}
@@ -128,7 +131,8 @@ class SearchResultList extends React.Component{
           </div>
         :
           <div>
-            console.log('break2');
+            <p>That is not a real reddit board! Try again.</p>
+            <img src='http://i1.kym-cdn.com/entries/icons/facebook/000/000/894/wahmbulance.jpg' />
           </div>
       }
     </div>
