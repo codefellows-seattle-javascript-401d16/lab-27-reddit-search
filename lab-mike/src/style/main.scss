@@ -1,0 +1,130 @@
+$color-primary: #4E648E;
+$color-secondary: #7788AA;
+$color-gray: #52555B;
+$color-black: #1C1D20;
+$color-white: #D6D8DD;
+
+* {
+  position: static;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 1em;
+  font-weight: normal;
+  font-style: normal;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  text-decoration: none;
+  color: $color-black;
+  border: none;
+  outline: none;
+  background: none;
+  white-space: normal;
+  list-style: none;
+  display: inline;
+}
+
+form *:focus {
+  border: none;
+  outline: none;
+}
+
+input::placeholder, textarea::placeholder {
+  font-weight: normal;
+  font-style: normal;
+  font-size: 1em;
+  color: black;
+}
+
+
+title, script, link {
+  display: none;
+}
+
+
+body {
+  background: $color-secondary;
+  position: relative;
+  display: block;
+}
+
+p {
+  display: block;
+}
+pre {
+  white-space: pre;
+  display: block;
+}
+
+hr {
+  padding: 2.5%;
+}
+span, em, strong {
+  display: inline;
+}
+
+em {
+  font-style: italic;
+}
+
+strong {
+  font-weight: 700;
+}
+
+a {
+  color: $color-black;
+  text-decoration: underline;
+}
+
+a:visited {
+  color: $color-black;
+  text-decoration: underline;
+}
+a:hover {
+  color: $color-black;
+  text-decoration: underline;
+}
+
+
+button {
+  border: 1px solid $color-black;
+}
+
+button:hover {
+  border: 1px solid blue;
+  background: $color-primary;
+}
+
+h1 {
+  display: block;
+  font-size: calc(1em * 2.2);
+}
+
+h2 {
+  display: block;
+  font-size: calc(1em * 1.9);
+}
+
+h3 {
+  display: block;
+  font-size: calc(1em * 1.6);
+}
+
+h4 {
+  display: block;
+  font-size: calc(1em * 1.4);
+}
+
+h5 {
+  display: block;
+  font-size: calc(1em * 1.2);
+}
+
+h6 {
+  display: block;
+  font-size: calc(1em * 1.1);
+}
+
+.error {
+  border: red 1px solid;
+}
