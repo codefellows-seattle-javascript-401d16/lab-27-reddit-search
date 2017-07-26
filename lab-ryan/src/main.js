@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import superagent from 'superagent';
+import './style/main.scss';
 
-const API_URL = 'http://reddit.com/r';
+const API_URL = 'http://www.reddit.com/r';
 
 // create a form container component every time you create a form
 // a form container is a component that holds the state for a forms inputs
@@ -64,75 +65,78 @@ class SearchForm extends React.Component {
 }
 
 //should recieve an array of reddit artiles through props
-class RedditArticleList extends React.Component {
+class SearchResultList extends React.Component {
   constructor(props){
-    super(props)
-    this.state = {};
+    super(props);
+    this.state = {
+    }
   }
   render(){
-    let articles = this.props.articles || [];
+    let listItems = this.props.topics.map((item) => {
     return (
       <ul>
-        {articles.map((item , i) =>
-          <li key={i}>
-            <a href={item.data.url}> {item.data.title} </a>
+         <li key={item.data.id}>
+          <a href={`http://www.reddit.com/${item.data.permalink}`}  target="_blank">
+            <h1>{item.data.title}</h1>
+            <img src={item.data.thumbnail}/>
+            <p>{item.data.ups}</p>
+            </a>
           </li>
-        )}
-      </ul>
-    );
+
+        )
+      })
+      return (
+        <div>
+          <h1> Results </h1>
+          <ul>
+            {listItems}
+          </ul>
+        </div>
+      )
+    }
   }
-}
 
 // App's job is to hold all applicaiton state
 class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      results: null,
-      searchErrorMessage: null,
-    };
+      topics: {},
+      hasError: false,
+    }
 
     this.searchReddit = this.searchReddit.bind(this);
-  }
+}
 
-  componentDidUpdate(){
-    console.log(':::STATE:::', this.state);
-  }
-
-  redditBoardFetch(board){
-    superagent.get(`${API_URL}/${board}.json`)
-      .then(res => {
-        console.log('request succes', res);
-        this.setState({
-          results: res.body.data.children,
-          searchErrorMessage: null,
-        });
+  searchReddit(name, limit){
+    superagent.get(`${API_URL}/${name}.json?limit=${limit}`)
+        .then(res => {
+          console.log('res', res.body);
+          this.setState({
+            topics: res.body.data.children;
       })
-      .catch(err => {
-        console.error(err);
-        this.setState({
-          results: null,
-          searchErrorMessage: `Unable to find the reddit board ${board}.`,
-        });
-      });
-  }
+    })
+    .catch(err => {
+      console.log('err', err);
+      this.setState({
+        hasError: true
+      })
+    })
+}
 
-  render(){
-    return (
-      <main>
-        <h1> cool beans </h1>
-        <SearchForm
-          title='Reddit Board'
-          handleSearch={this.redditBoardFetch}
-        />
-        {renderIf(this.state.results,
-          <RedditArticleList articles={this.state.results} />)}
-
-        {renderIf(this.state.searchErrorMessage,
-          <p> {this.state.searchErrorMessage} </p>)}
-      </main>
-    );
+render(){
+  return (
+    <div>
+    <h1> Search Reddit </h1>
+    <searchForm
+    searchReddit={this.searchReddit}
+    hasError={this.state.hasError} />
+    <SearchResultList topics={this.state.topics}/>
+    </div>
+    )
   }
 }
 
-ReactDom.render(<App />, document.getElementById('root'));
+const container = document.createElement('div');
+document.body.appendChild(container);
+ReactDom.render(<App />, container);
