@@ -1,18 +1,19 @@
-import React from 'react'
-import ReactDom from 'react-dom'
-import superagent from 'superagent'
+import React from 'react';
+import ReactDom from 'react-dom';
+import superagent from 'superagent';
+import './style/main.scss';
 
-const API_URL = 'http://reddit.com/r'
+const API_URL = 'http://www.reddit.com/r';
 
 // create a form container component every time you create a form
 // a form container is a component that holds the state for a forms inputs
-class RedditForm extends React.Component {
+class SearchForm extends React.Component {
   constructor(props){
-    super(props)
+    super(props);
     this.state = {
       textInput: '',
       numberInput: '',
-    }
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleTextInputChange = this.handleTextInputChange.bind(this);
@@ -20,152 +21,122 @@ class RedditForm extends React.Component {
   }
 
   handleTextInputChange(e){
-    this.setState({textInput: e.target.value})
+    this.setState({textInput: e.target.value});
   }
 
   handleNumberInputChange(e){
-    this.setState({numberInput: e.target.value})
+    this.setState({numberInput: e.target.value});
   }
 
   handleSubmit(e){
-    e.preventDefault()
-    this.props.redditSelect(this.state.textInput, this.state.numberInput);
+    e.preventDefault();
+    this.props.searchReddit(this.state.textInput, this.state.numberInput);
 
   }
 
   render(){
     return (
-      // ALL INPUTS SHHOULD HAVE THEIR VALUES BOUND TO A STATE
-      // this is called controlled inputs
-      // we create controlled inputs by binding "value" to a state property
-      // and providing an onChange event handler to the input
-      <form onSubmit={this.handleSubmit} >
+      <form>
         <input
           type='text'
-          className={this.props}
-          placeholder='poke name'
-          value={this.state.pokeName}
-          onChange={this.handlePokeNameChange}
-          />
+          className={this.props.hasError ? 'err' : ''}
+          name='redditSearch'
+          placeholder='search reddit'
+          value={this.state.textInput}
+          onChange={this.handleTextInputChange}
+        />
+        <input
+          type='number'
+          name='numberInput'
+          min='0'
+          max='100'
+          value={this.state.numberInput}
+          onChange={this.handleNumberInputChange}
+        />
+        <input
+          type='submit'
+          name='submitButton'
+          value='search'
+          onClick={this.handleSubmit}
+        />
       </form>
-    )
+    );
   }
 }
 
+//should recieve an array of reddit artiles through props
+class SearchResultList extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+    }
+  }
+  render(){
+    let listItems = this.props.topics.map((item) => {
+    return (
+      <ul>
+         <li key={item.data.id}>
+          <a href={`http://www.reddit.com/${item.data.permalink}`}  target="_blank">
+            <h1>{item.data.title}</h1>
+            <img src={item.data.thumbnail}/>
+            <p>{item.data.ups}</p>
+            </a>
+          </li>
+
+        )
+      })
+      return (
+        <div>
+          <h1> Results </h1>
+          <ul>
+            {listItems}
+          </ul>
+        </div>
+      )
+    }
+  }
+
+// App's job is to hold all applicaiton state
 class App extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      pokemonLookup: {},
-      pokemonSelected: null,
-      pokemonNameError: null,
+      topics: {},
+      hasError: false,
     }
 
-    this.pokemonSelect = this.pokemonSelect.bind(this)
-  }
-  // called evertime the state is changed
+    this.searchReddit = this.searchReddit.bind(this);
+}
 
-  componentDidUpdate(){
-    console.log('___STATE___', this.state)
-  }
-
-  // this will get called once right before the app componet
-  // gets added to the dom
-  componentDidMount(){
-    console.log('hello wrold')
-    if(localStorage.pokemonLookup){
-      try {
-        let pokemonLookup = JSON.parse(localStorage.pokemonLookup)
-        this.setState({pokemonLookup})
-      } catch(err) {
-        console.log(err)
-      }
-    } else {
-      superagent.get(`${API_URL}/pokemon/`)
-      .then(res => {
-
-        let pokemonLookup = res.body.results.reduce((lookup, n) => {
-          lookup[n.name] = n.url;
-          return lookup
-        }, {})
-
-        try {
-          localStorage.pokemonLookup = JSON.stringify(pokemonLookup)
-          this.setState({pokemonLookup})
-        } catch (err) {
-          console.error(err)
-        }
+  searchReddit(name, limit){
+    superagent.get(`${API_URL}/${name}.json?limit=${limit}`)
+        .then(res => {
+          console.log('res', res.body);
+          this.setState({
+            topics: res.body.data.children;
       })
-      .catch(console.error)
-    }
-
-  }
-
-  pokemonSelect(name){
-    console.log('cool beans')
-    if(!this.state.pokemonLookup[name]){
-      // do something on state that enables the
-      // view to show an error that that pokemon does not exist
+    })
+    .catch(err => {
+      console.log('err', err);
       this.setState({
-        pokemonSelected: null,
-        pokemonNameError: name,
+        hasError: true
       })
-    } else {
-      // make a request to the pokemon api and do something on
-      // state to store the pokemons details to be desplayed to the user
-      superagent.get(this.state.pokemonLookup[name])
-      .then(res => {
-        console.log('selected pokemon', res.body)
-        this.setState({
-          pokemonSelected: res.body,
-          pokemonNameError: null,
-        })
-      })
-      .catch(console.error)
-    }
+    })
+}
 
-  }
-
-  render(){
-    return (
-      <div>
-        <h1> form demo </h1>
-
-        <PokemonForm pokemonSelect={this.pokemonSelect} />
-
-        { this.state.pokemonNameError ?
-          <div>
-            <h2> pokemon {this.state.pokemonNameError} does not exist </h2>
-            <p> make another request ! </p>
-          </div> :
-          <div>
-          { this.state.pokemonSelected ?
-            <div>
-              <h2> selected {this.state.pokemonSelected.name} </h2>
-              <p> booyea </p>
-              <h3> abilities </h3>
-              <ul>
-                {this.state.pokemonSelected.abilities.map((item, i) => {
-                  return (
-                    <li key={i}>
-                      <p> {item.ability.name} </p>
-                    </li>
-                  )
-                })}
-              </ul>
-            </div> :
-            <div>
-              <p> make a request </p>
-            </div>
-          }
-          </div>
-        }
-      </div>
+render(){
+  return (
+    <div>
+    <h1> Search Reddit </h1>
+    <searchForm
+    searchReddit={this.searchReddit}
+    hasError={this.state.hasError} />
+    <SearchResultList topics={this.state.topics}/>
+    </div>
     )
   }
 }
 
-// create a place to put the app
-const container = document.createElement('div')
-document.body.appendChild(container)
-ReactDom.render(<App />, container)
+const container = document.createElement('div');
+document.body.appendChild(container);
+ReactDom.render(<App />, container);
