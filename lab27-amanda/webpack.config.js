@@ -12,7 +12,7 @@ module.exports = {
     publicPath: '/',
   },
   plugins: [
-    new HTMLPlugin(),
+    new HTMLPlugin({template: `${__dirname}/src/index.html` }),
     new ExtractPlugin('bundle-[hash].css'),
   ],
   module: {
